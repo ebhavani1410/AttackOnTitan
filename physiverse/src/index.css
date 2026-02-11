@@ -1,65 +1,125 @@
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", sans-serif;
-}
+/* =========================
+   GLOBAL STYLING
+========================= */
 
-/* Page Background */
 body {
-  background: linear-gradient(135deg, #f5f9ff, #e8f1ff);
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to bottom, #cfe0f3, #b8cde3);
   min-height: 100vh;
-  color: #1a1a1a;
 }
 
-/* Container */
 .container {
-  padding: 60px 80px;
+  text-align: center;
+  padding-top: 60px;
 }
 
-/* Headings */
-h1, h2 {
-  color: #0a84ff;
-  margin-bottom: 20px;
+h1 {
+  font-size: 42px;
+  color: #1aa6d9;
+  margin-bottom: 10px;
 }
 
-/* Subtitle */
 .subtitle {
   color: #555;
-  margin-bottom: 40px;
   font-size: 18px;
+  margin-bottom: 50px;
 }
 
-/* Card Grid */
+/* =========================
+   CLOUD GRID
+========================= */
+
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  position: relative;
+  width: 100%;
+  height: 600px;
 }
 
-/* Cards */
+/* Cloud Card Base */
 .card {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-  transition: 0.3s ease;
+  position: absolute;
+  width: 240px;
+  padding: 30px 20px;
+  background: #f3f3f3;
+  border-radius: 60px;
+  text-align: center;
   cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0, 132, 255, 0.15);
+/* Cloud bumps */
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  background: #f3f3f3;
+  border-radius: 50%;
+  z-index: -1;
 }
 
-/* Card title */
+.card::before {
+  width: 80px;
+  height: 80px;
+  top: -30px;
+  left: 35px;
+}
+
+.card::after {
+  width: 70px;
+  height: 70px;
+  top: -20px;
+  right: 40px;
+}
+
 .card h3 {
-  margin-bottom: 10px;
-  color: #1a1a1a;
+  margin: 0;
+  font-size: 20px;
 }
 
-/* Card text */
 .card p {
+  margin-top: 8px;
   color: #666;
+  font-size: 14px;
+}
+
+/* Hover effect */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   EXACT SCATTER POSITIONS
+========================= */
+
+.card:nth-child(1) {   /* Laws of Motion */
+  top: 40px;
+  left: 12%;
+}
+
+.card:nth-child(2) {   /* Vertical Motion */
+  top: 40px;
+  right: 12%;
+}
+
+.card:nth-child(3) {   /* Work & Energy */
+  top: 200px;
+  left: 38%;
+}
+
+.card:nth-child(4) {   /* Projectile Motion */
+  top: 280px;
+  left: 15%;
+}
+
+.card:nth-child(5) {   /* Thermodynamics */
+  top: 280px;
+  right: 12%;
+}
+
+.card:nth-child(6) {   /* Circular Motion */
+  top: 420px;
+  left: 45%;
 }

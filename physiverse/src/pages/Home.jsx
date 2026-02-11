@@ -1,42 +1,38 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Home() {
+function Home() {
   const navigate = useNavigate();
 
   const topics = [
-    "Projectile Motion",
     "Laws of Motion",
+    "Vertical Motion",
     "Work & Energy",
+    "Projectile Motion",
     "Thermodynamics",
-    "Electromagnetism",
-    "Quantum Physics",
-    "Fluid Mechanics",
-    "Waves & Sound",
-    "Optics"
+    "Circular Motion"
   ];
 
   return (
     <div className="container">
-      <h1 style={{ textAlign: "center", color: "#00E5FF" }}>
-        Welcome to Physiverse
-      </h1>
-
-      <p style={{ textAlign: "center", opacity: 0.7 }}>
-        Explore the fascinating world of physics through interactive lessons and simulations.
+      <h1>Welcome to The World Of Science</h1>
+      <p className="subtitle">
+        Explore the fascinating world of science and technology through interactive lessons.
       </p>
 
-      <div className="grid">
-        {topics.map((topic) => (
+      <div className="card-grid">
+        {topics.map((topic, index) => (
           <div
-            key={topic}
+            key={index}
             className="card"
             onClick={() => navigate(`/topic/${topic}`)}
           >
             <h3>{topic}</h3>
-            <p style={{ opacity: 0.6 }}>Start Learning →</p>
+            <p>Explore →</p>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+export default Home;
