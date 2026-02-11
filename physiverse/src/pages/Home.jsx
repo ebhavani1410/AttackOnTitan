@@ -4,13 +4,14 @@ function Home() {
   const navigate = useNavigate();
 
   const topics = [
-    "Laws of Motion",
-    "Vertical Motion",
-    "Work & Energy",
-    "Projectile Motion",
-    "Thermodynamics",
-    "Circular Motion"
-  ];
+  { name: "Laws of Motion", path: "laws" },
+  { name: "Vertical Motion", path: "vertical" },
+  { name: "Work & Energy", path: "work" },
+  { name: "Projectile Motion", path: "projectile" },
+  { name: "Thermodynamics", path: "thermo" },
+  { name: "Circular Motion", path: "circular" }
+];
+
 
   return (
     <div className="container">
@@ -24,9 +25,11 @@ function Home() {
           <div
             key={index}
             className="card"
-            onClick={() => navigate(`/topic/${topic}`)}
+            onClick={() => navigate(`/topic/${topic.path}`)}
+
           >
-            <h3>{topic}</h3>
+            <h3>{topic.name}</h3>
+
             <p>Explore →</p>
           </div>
         ))}
