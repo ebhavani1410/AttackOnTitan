@@ -1,74 +1,135 @@
-# AI Powered Physics Word Problem Visualizer
+🧠 PhySim AI
+AI-Enhanced Physics Simulation Platform
+🚀 Overview
 
-This project is a Streamlit web application that uses Natural Language Processing (NLP) to parse physics word problems and generate interactive simulations.
+PhySim AI is an interactive physics learning platform that integrates rule-based Natural Language Processing (NLP) with real-time simulations.
 
----
+Users can enter physics word problems in plain English, and the system automatically:
 
-## Features
+Extracts physical parameters
 
--   **Natural Language Processing:** Uses spaCy to extract parameters like velocity, angle, and height from a text description.
--   **Interactive Simulations:** Visualizes projectile motion using Plotly, allowing for real-time adjustments.
--   **User-Friendly Interface:** Built with Streamlit for a simple and intuitive web interface.
+Updates simulation controls
 
----
+Computes derived values
 
-## Technical Stack
+Generates dynamic visualizations
 
--   **Frontend:** Streamlit
--   **NLP:** spaCy
--   **Visualization:** Plotly
--   **Core Logic:** Python, NumPy, Pandas
+The project bridges the gap between theory and visualization using AI-assisted parameter extraction.
 
----
+🎯 Key Features
 
-## Setup and Installation
+🧠 NLP-based parameter extraction (regex-based parsing)
 
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    cd <repository-folder>
-    ```
+📚 Topic-wise intelligent parsing
 
-2.  **Create and activate a virtual environment:**
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```
+🎛 Automatic slider updates from text input
 
-3.  **Install the dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+🎨 Real-time Canvas animations
 
----
+📊 Dynamic physics calculations
 
-## How to Run
+🧩 Modular architecture using React
 
-Once the setup is complete, you can run the Streamlit application with the following command:
+📚 Supported Physics Modules
 
-```bash
-streamlit run run.py
-```
+Each module includes natural language parsing + interactive simulation:
 
-This will start the web server and open the application in your default web browser.
+Newton’s Laws of Motion
+Extracts mass, force, time → computes acceleration & displacement
 
----
+Vertical Motion
+Extracts initial velocity, gravity → computes max height & time of flight
 
-## Project Structure
+Projectile Motion
+Extracts velocity, angle → simulates 2D trajectory
 
-```
-.
-├── .venv/
-├── README.md
-├── requirements.txt
-└── run.py
-```
+Uniform Circular Motion
+Extracts radius, velocity, mass → computes centripetal force & acceleration
 
----
+Collision (Elastic)
+Extracts masses & initial velocities → calculates post-collision velocities
 
-## Future Scope
+Friction
+Extracts mass, applied force, coefficient → computes net force & motion
 
--   Graph plotting (Position–Time, Velocity–Time)
--   Additional motion types (e.g., circular motion, collisions)
--   Enhanced visualization with 3D models
--   Integration with a Large Language Model (LLM) for more advanced problem understanding and explanation.
+Simple Pendulum
+Extracts length, gravity, angle → computes time period & oscillation
+
+🧠 How It Works
+User Word Problem
+        ↓
+Rule-Based NLP Parser
+        ↓
+Parameter Extraction
+        ↓
+React State Update
+        ↓
+Physics Computation
+        ↓
+Canvas Animation
+
+
+Each topic includes a contextual parser tailored to its physics domain.
+
+💻 Tech Stack
+
+React.js
+
+JavaScript (ES6+)
+
+HTML5 Canvas API
+
+React Router
+
+Regex-based NLP
+
+⚙️ Example Input
+A 5 kg block is pushed with 40 N for 6 seconds
+
+
+System automatically:
+
+Extracts mass = 5
+
+Extracts force = 40
+
+Extracts time = 6
+
+Computes acceleration
+
+Animates motion
+
+🧩 Architecture
+
+Modular topic-based components
+
+Independent simulation engines
+
+Dedicated NLP parser per module
+
+Scalable design for future expansion
+
+🔮 Future Enhancements
+
+Unified shared NLP utility
+
+AI confidence scoring
+
+Graph plotting (velocity-time, displacement-time)
+
+Voice-to-text input
+
+ML-based NLP integration
+
+🚀 Run Locally
+npm install
+npm run dev
+
+
+Open in browser:
+
+http://localhost:5173
+
+🏆 Summary
+
+PhySim AI transforms traditional physics problem-solving into an AI-assisted interactive experience by combining natural language understanding with real-time simulation modeling.
