@@ -26,7 +26,7 @@ function Home() {
             key={index}
             className="card"
             onClick={() => navigate(`/topic/${topic.path}`)}
-
+            
           >
             <h3>{topic.name}</h3>
 
