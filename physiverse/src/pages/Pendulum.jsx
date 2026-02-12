@@ -3,10 +3,35 @@ import { useState, useEffect, useRef } from "react";
 export default function Pendulum() {
   const [length, setLength] = useState(200); // pixels
   const [gravity, setGravity] = useState(9.8);
-  const [angle, setAngle] = useState(30); // degrees
+  const [angle, setAngle] = useState(30);
   const [speed, setSpeed] = useState(1);
 
+  const [inputText, setInputText] = useState("");
+
   const canvasRef = useRef(null);
+
+  const lengthInMeters = length / 100;
+  const timePeriod = 2 * Math.PI * Math.sqrt(lengthInMeters / gravity);
+
+  // 🔥 NLP PARSER
+  const parseInput = () => {
+    const text = inputText.toLowerCase();
+
+    // Length in meters (convert to pixels scale)
+    const lMatch = text.match(/(\d+)\s*m/);
+    if (lMatch) {
+      const meters = parseFloat(lMatch[1]);
+      setLength(meters * 100); // scale to pixels
+    }
+
+    // Gravity
+    const gMatch = text.match(/(\d+\.?\d*)\s*m\/?s²?/);
+    if (gMatch) setGravity(parseFloat(gMatch[1]));
+
+    // Angle
+    const aMatch = text.match(/(\d+)\s*degree/);
+    if (aMatch) setAngle(parseFloat(aMatch[1]));
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,7 +41,7 @@ export default function Pendulum() {
     let startTime = null;
 
     const pivotX = canvas.width / 2;
-    const pivotY = 80;
+    const pivotY = 100;
 
     const radians = (angle * Math.PI) / 180;
 
@@ -25,7 +50,7 @@ export default function Pendulum() {
 
       const t = ((timestamp - startTime) / 1000) * speed;
 
-      const omega = Math.sqrt(gravity / (length / 100)); 
+      const omega = Math.sqrt(gravity / lengthInMeters);
       const theta = radians * Math.cos(omega * t);
 
       const bobX = pivotX + length * Math.sin(theta);
@@ -33,13 +58,13 @@ export default function Pendulum() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw pivot point
+      // Pivot
       ctx.fillStyle = "#000";
       ctx.beginPath();
       ctx.arc(pivotX, pivotY, 6, 0, Math.PI * 2);
       ctx.fill();
 
-      // Draw string
+      // String
       ctx.beginPath();
       ctx.moveTo(pivotX, pivotY);
       ctx.lineTo(bobX, bobY);
@@ -47,9 +72,9 @@ export default function Pendulum() {
       ctx.lineWidth = 3;
       ctx.stroke();
 
-      // Draw bob
+      // Bob
       ctx.beginPath();
-      ctx.arc(bobX, bobY, 20, 0, Math.PI * 2);
+      ctx.arc(bobX, bobY, 22, 0, Math.PI * 2);
       ctx.fillStyle = "#ff5722";
       ctx.fill();
 
@@ -63,11 +88,58 @@ export default function Pendulum() {
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>Simple Pendulum Simulation</h1>
+      <h1>🧠 Simple Pendulum (AI Enabled)</h1>
 
-      <p>
-        θ(t) = θ₀ cos( √(g/L) t )
-      </p>
+      {/* 🔥 NLP SECTION */}
+      <div
+        style={{
+          background: "#f5f7fa",
+          padding: "20px",
+          borderRadius: "10px",
+          marginBottom: "30px"
+        }}
+      >
+        <h2>Enter Physics Word Problem</h2>
+
+        <input
+          type="text"
+          placeholder="Example: A pendulum of length 2 m oscillates at 30 degree in 9.8 m/s² gravity"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "10px",
+            fontSize: "16px"
+          }}
+        />
+
+        <button
+          onClick={parseInput}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#4f46e5",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer"
+          }}
+        >
+          Analyze Problem
+        </button>
+      </div>
+
+      <h2>Key Equations</h2>
+      <p><strong>Angular Displacement:</strong> θ(t) = θ₀ cos(√(g/L) t)</p>
+      <p><strong>Time Period:</strong> T = 2π √(L/g)</p>
+
+      <h3>Calculated Time Period</h3>
+      <p>Time Period (T) = {timePeriod.toFixed(2)} s</p>
+
+      <hr style={{ margin: "30px 0" }} />
+
+      <h2>Interactive Simulation</h2>
 
       <div style={{ marginBottom: "15px" }}>
         <label>Length: {length} px</label><br />
@@ -117,12 +189,12 @@ export default function Pendulum() {
 
       <canvas
         ref={canvasRef}
-        width={900}
-        height={500}
+        width={1000}
+        height={600}
         style={{
           border: "2px solid #ddd",
           backgroundColor: "#ffffff",
-          borderRadius: "10px"
+          borderRadius: "12px"
         }}
       />
     </div>

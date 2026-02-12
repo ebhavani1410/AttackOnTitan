@@ -1,27 +1,42 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function CircularMotion() {
-  const [radius, setRadius] = useState(150);
-  const [velocity, setVelocity] = useState(5);
-  const [mass, setMass] = useState(2);
+export default function Friction() {
+  const [mass, setMass] = useState(5);
+  const [appliedForce, setAppliedForce] = useState(30);
+  const [mu, setMu] = useState(0.3);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
 
   const [inputText, setInputText] = useState("");
 
   const canvasRef = useRef(null);
 
+  const gravity = 9.8;
+  const normalForce = mass * gravity;
+  const frictionForce = mu * normalForce;
+
+  const netForce =
+    appliedForce > frictionForce
+      ? appliedForce - frictionForce
+      : 0;
+
+  const acceleration = netForce / mass;
+
   // 🔥 NLP PARSER
   const parseInput = () => {
     const text = inputText.toLowerCase();
 
-    const rMatch = text.match(/(\d+)\s*m/);
-    if (rMatch) setRadius(parseFloat(rMatch[1]));
-
-    const vMatch = text.match(/(\d+)\s*m\/?s/);
-    if (vMatch) setVelocity(parseFloat(vMatch[1]));
-
     const mMatch = text.match(/(\d+)\s*kg/);
     if (mMatch) setMass(parseFloat(mMatch[1]));
+
+    const fMatch = text.match(/(\d+)\s*n/);
+    if (fMatch) setAppliedForce(parseFloat(fMatch[1]));
+
+    const muMatch = text.match(/mu\s*=?\s*(\d*\.?\d+)/);
+    if (muMatch) setMu(parseFloat(muMatch[1]));
+
+    // Alternative detection like "coefficient 0.4"
+    const coeffMatch = text.match(/coefficient.*?(\d*\.?\d+)/);
+    if (coeffMatch) setMu(parseFloat(coeffMatch[1]));
   };
 
   useEffect(() => {
@@ -31,56 +46,43 @@ export default function CircularMotion() {
     let animationFrameId;
     let startTime = null;
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
+    const ground = canvas.height - 80;
+    const scale = 20;
 
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
 
       const t = ((timestamp - startTime) / 1000) * speedMultiplier;
 
-      const omega = velocity / radius;
-      const x = centerX + radius * Math.cos(omega * t);
-      const y = centerY + radius * Math.sin(omega * t);
-
-      const centripetalForce = (mass * velocity * velocity) / radius;
-      const centripetalAcceleration = (velocity * velocity) / radius;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw circular path
+      // Ground
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = "#cccccc";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Draw center
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
-      ctx.fillStyle = "#000";
-      ctx.fill();
-
-      // Draw radius line
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY);
-      ctx.lineTo(x, y);
+      ctx.moveTo(0, ground);
+      ctx.lineTo(canvas.width, ground);
       ctx.strokeStyle = "#444";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.stroke();
 
-      // Draw moving particle
-      ctx.beginPath();
-      ctx.arc(x, y, 15, 0, Math.PI * 2);
+      let displacement = 0;
+
+      if (appliedForce > frictionForce) {
+        displacement = 0.5 * acceleration * t * t;
+      }
+
+      const x = Math.min(displacement * scale, canvas.width - 120);
+
+      // Block
       ctx.fillStyle = "#ff5722";
-      ctx.fill();
+      ctx.fillRect(x, ground - 60, 120, 60);
 
       // Physics Values
       ctx.fillStyle = "#000";
-      ctx.font = "18px Arial";
-      ctx.fillText(`ω = ${omega.toFixed(2)} rad/s`, 30, 30);
-      ctx.fillText(`aₙ = ${centripetalAcceleration.toFixed(2)} m/s²`, 30, 60);
-      ctx.fillText(`Fₙ = ${centripetalForce.toFixed(2)} N`, 30, 90);
+      ctx.font = "20px Arial";
+      ctx.fillText(`Applied Force: ${appliedForce.toFixed(1)} N`, 40, 40);
+      ctx.fillText(`Friction Force: ${frictionForce.toFixed(1)} N`, 40, 70);
+      ctx.fillText(`Net Force: ${netForce.toFixed(1)} N`, 40, 100);
+      ctx.fillText(`Acceleration: ${acceleration.toFixed(2)} m/s²`, 40, 130);
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -88,24 +90,26 @@ export default function CircularMotion() {
     animationFrameId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [radius, velocity, mass, speedMultiplier]);
+  }, [mass, appliedForce, mu, speedMultiplier]);
 
   return (
     <div style={{ padding: "40px" }}>
-      <h1>🧠 Uniform Circular Motion (AI Enabled)</h1>
+      <h1>🧠 Friction Simulation (AI Enabled)</h1>
 
       {/* 🔥 NLP SECTION */}
-      <div style={{
-        background: "#f5f7fa",
-        padding: "20px",
-        borderRadius: "10px",
-        marginBottom: "30px"
-      }}>
+      <div
+        style={{
+          background: "#f5f7fa",
+          padding: "20px",
+          borderRadius: "10px",
+          marginBottom: "30px"
+        }}
+      >
         <h2>Enter Physics Word Problem</h2>
 
         <input
           type="text"
-          placeholder="Example: A 2 kg object moves in a circle of 120 m radius with 10 m/s velocity"
+          placeholder="Example: A 5 kg block is pushed with 40 N and coefficient 0.4"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           style={{
@@ -133,44 +137,45 @@ export default function CircularMotion() {
       </div>
 
       <h2>Key Formulas</h2>
-      <p><strong>Angular Velocity:</strong> ω = v / r</p>
-      <p><strong>Centripetal Acceleration:</strong> aₙ = v² / r</p>
-      <p><strong>Centripetal Force:</strong> Fₙ = mv² / r</p>
+      <p><strong>Normal Force:</strong> N = mg</p>
+      <p><strong>Friction:</strong> F = μN</p>
+      <p><strong>Net Force:</strong> F_net = F_applied − F_friction</p>
 
       <hr style={{ margin: "30px 0" }} />
 
       <h2>Interactive Simulation</h2>
 
       <div style={{ marginBottom: "15px" }}>
-        <label>Radius: {radius}px</label><br />
-        <input
-          type="range"
-          min="50"
-          max="250"
-          value={radius}
-          onChange={(e) => setRadius(Number(e.target.value))}
-        />
-      </div>
-
-      <div style={{ marginBottom: "15px" }}>
-        <label>Velocity: {velocity} m/s</label><br />
-        <input
-          type="range"
-          min="1"
-          max="20"
-          value={velocity}
-          onChange={(e) => setVelocity(Number(e.target.value))}
-        />
-      </div>
-
-      <div style={{ marginBottom: "15px" }}>
         <label>Mass: {mass} kg</label><br />
         <input
           type="range"
           min="1"
-          max="10"
+          max="20"
           value={mass}
           onChange={(e) => setMass(Number(e.target.value))}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label>Applied Force: {appliedForce} N</label><br />
+        <input
+          type="range"
+          min="0"
+          max="150"
+          value={appliedForce}
+          onChange={(e) => setAppliedForce(Number(e.target.value))}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label>Coefficient of Friction (μ): {mu}</label><br />
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value={mu}
+          onChange={(e) => setMu(Number(e.target.value))}
         />
       </div>
 
@@ -188,12 +193,12 @@ export default function CircularMotion() {
 
       <canvas
         ref={canvasRef}
-        width={900}
-        height={600}
+        width={1100}
+        height={550}
         style={{
           border: "2px solid #ddd",
           backgroundColor: "#ffffff",
-          borderRadius: "10px"
+          borderRadius: "12px"
         }}
       />
     </div>
