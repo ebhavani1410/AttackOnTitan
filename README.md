@@ -83,6 +83,13 @@ React Router
 
 Regex-based NLP
 
+## 📦 Dependencies
+
+- React
+- React Router
+- Vite (for development server)
+- Node.js (v16+ recommended)
+
 ⚙️ Example Input
 A 5 kg block is pushed with 40 N for 6 seconds
 
@@ -120,6 +127,8 @@ Graph plotting (velocity-time, displacement-time)
 Voice-to-text input
 
 ML-based NLP integration
+
+[🌐 View Full Source Code on GitHub](https://github.com/ebhavani1410/AttackOnTitan)
 
 🚀 Run Locally
 npm install
