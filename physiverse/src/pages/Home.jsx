@@ -4,11 +4,11 @@ function Home() {
   const navigate = useNavigate();
 
   const topics = [
-  { name: "Laws of Motion", path: "laws" },
+  { name: "Second Law of Motion", path: "laws" },
   { name: "Vertical Motion", path: "vertical" },
-  { name: "Work & Energy", path: "work" },
+  { name: "Pendulum Motion", path: "pendulum" },
   { name: "Projectile Motion", path: "projectile" },
-  { name: "Thermodynamics", path: "thermo" },
+  { name: "Collision", path: "collision" },
   { name: "Circular Motion", path: "circular" }
 ];
 
@@ -26,6 +26,7 @@ function Home() {
             key={index}
             className="card"
             onClick={() => navigate(`/topic/${topic.path}`)}
+            
             
           >
             <h3>{topic.name}</h3>
